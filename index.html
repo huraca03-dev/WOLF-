@@ -1,21 +1,382 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WOLF RF | Estudio de Co-Creación & Combos Personalizados</title>
-    <meta name="description" content="Plataforma e-commerce interactiva de co-creación y venta de combos personalizados de WOLF RF en Cartagena de Indias. Diseña camisetas, mugs, tote bags y accesorios en tiempo real." />
-    <meta property="og:title" content="WOLF RF | Estudio de Co-Creación & Combos Personalizados" />
-    <meta property="og:description" content="Plataforma e-commerce interactiva de co-creación y venta de combos personalizados de WOLF RF en Cartagena de Indias. Diseña camisetas, mugs, tote bags y accesorios en tiempo real." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body class="bg-[#FAFAFA] text-[#111111] antialiased selection:bg-[#111111] selection:text-[#FAFAFA]">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WOLF RF | Estudio de Co-Creación & Combos Personalizados</title>
+  <meta name="description" content="Plataforma interactiva de co-creación y venta de combos personalizados de WOLF RF en Cartagena. Diseña camisetas, mugs y tote bags en tiempo real con anticipo del 50%." />
 
+  <!-- Google Fonts Oficiales -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wolf: {
+              black: '#111111',
+              white: '#FFFFFF',
+              milk: '#FAFAFA',
+              beige: '#F5F0EB',
+              nude: '#E8DFD8',
+              sand: '#D7C4B7',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            editorial: ['"Playfair Display"', 'Georgia', 'serif'],
+            urban: ['"Space Grotesk"', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- React 18 & ReactDOM vía CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel Standalone para transpilar JSX directamente en el navegador -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      background-color: #FAFAFA;
+      color: #111111;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f5f0eb;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d7c4b7;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #111111;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-[#111111] selection:text-[#FAFAFA]">
+  <div id="root"></div>
+
+  <!-- APLICACIÓN REACT SPA AUTÓNOMA (JSX EN VIVO) -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- ICONOS VECTORIALES INTEGRADOS (100% autónomos sin dependencias externas) ---
+    const IconSparkles = ({ className = "w-4 h-4" }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+      </svg>
+    );
+
+    const IconShoppingBag = ({ className = "w-4 h-4" }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    );
+
+    const IconUpload = ({ className = "w-4 h-4" }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    );
+
+    const IconMessageCircle = ({ className = "w-4 h-4" }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+      </svg>
+    );
+
+    // --- LOGO VECTORIAL OFICIAL DE WOLF RF (Centrado, sin inclinación) ---
+    const WolfLogo = ({ theme = 'light', size = 'md' }) => {
+      const isDark = theme === 'dark';
+      const fillPrimary = isDark ? '#FFFFFF' : '#111111';
+      const fillSecondary = isDark ? '#E8DFD8' : '#27272A';
+
+      const sizeMap = {
+        sm: { icon: 'h-8', text: 'text-base', sub: 'text-[10px]' },
+        md: { icon: 'h-10', text: 'text-xl', sub: 'text-xs' },
+        lg: { icon: 'h-14', text: 'text-2xl', sub: 'text-sm' },
+      }[size] || { icon: 'h-10', text: 'text-xl', sub: 'text-xs' };
+
+      return (
+        <div className="flex items-center gap-3 select-none">
+          <svg viewBox="0 0 100 100" className={`${sizeMap.icon} aspect-square shrink-0`} fill="none">
+            <path
+              d="M 50 14 C 52 17, 56 24, 57 28 C 59 25, 60 21, 62 18 C 63 22, 65 29, 64 34 C 69 36, 73 40, 75 46 C 77 48, 83 49, 87 50 C 89 51, 89 53, 87 54 C 83 55, 78 57, 76 60 C 73 63, 67 65, 63 65 C 59 66, 56 70, 52 75 C 51 77, 49 76, 48 74 C 50 67, 49 61, 45 56 C 41 51, 37 46, 38 41 C 38 38, 41 38, 43 40 C 41 36, 39 33, 40 29 C 42 30, 44 32, 45 34 C 46 29, 47 22, 50 14 Z"
+              fill={fillPrimary}
+            />
+            <polygon points="62,40 68,42 63,44" fill={isDark ? '#111111' : '#FFFFFF'} />
+            <path d="M 38 78 C 42 77, 47 77, 52 79" stroke={fillPrimary} strokeWidth="3.5" strokeLinecap="round" />
+          </svg>
+          <div className="flex flex-col justify-center leading-none">
+            <span className={`font-extrabold tracking-widest uppercase ${sizeMap.text}`} style={{ color: fillPrimary }}>
+              WOLF <span className="font-light tracking-normal opacity-90">RF</span>
+            </span>
+            <span className={`font-editorial italic tracking-normal ${sizeMap.sub} mt-0.5`} style={{ color: fillSecondary }}>
+              Ideas que se imprimen
+            </span>
+          </div>
+        </div>
+      );
+    };
+
+    // --- DATOS DEL CATÁLOGO & COMBOS ---
+    const PRODUCTS = [
+      {
+        id: 'prod-tshirt',
+        name: 'Camiseta Básica Personalizable',
+        type: 'tshirt',
+        price: 45000,
+        description: 'Algodón peinado premium de 200g. Tacto suave, costuras reforzadas y estampado DTF de alta definición.',
+        material: '100% Algodón Peinado Colombiano 200g',
+        sizes: ['S', 'M', 'L', 'XL'],
+        colors: [
+          { name: 'Negro Ónix', hex: '#18181B' },
+          { name: 'Blanco Nieve', hex: '#FFFFFF' },
+          { name: 'Beige Arena', hex: '#E8DFD8' },
+          { name: 'Gris Jaspe', hex: '#9CA3AF' },
+        ],
+      },
+      {
+        id: 'prod-mug',
+        name: 'Mug Cerámico Personalizable (11 oz)',
+        type: 'mug',
+        price: 25000,
+        description: 'Cerámica de alta densidad apta para microondas. Impresión perimetral 360° en colores vivos e indelebles.',
+        material: 'Cerámica Triple AAA Esmaltada 11 oz',
+        colors: [
+          { name: 'Negro Mate', hex: '#18181B' },
+          { name: 'Blanco Brillo', hex: '#FFFFFF' },
+          { name: 'Beige Nude', hex: '#E8DFD8' },
+        ],
+      },
+      {
+        id: 'prod-totebag',
+        name: 'Tote Bag de Lona Personalizable',
+        type: 'totebag',
+        price: 30000,
+        description: 'Lona de algodón orgánico (280g) con asas reforzadas ergonómicas de 65cm. Resistente y ecológica.',
+        material: 'Lona de Algodón Crudo 280g',
+        colors: [
+          { name: 'Beige Lona', hex: '#E8DFD8' },
+          { name: 'Negro Carbón', hex: '#18181B' },
+          { name: 'Blanco Crudo', hex: '#FFFFFF' },
+        ],
+      },
+      {
+        id: 'prod-keychain',
+        name: 'Llavero Acrílico / Metálico Personalizado',
+        type: 'keychain',
+        price: 15000,
+        description: 'Acrílico cristal de 4mm cortado a láser o acabado metálico pulido. Grabado doble cara con argolla plana de acero.',
+        material: 'Acrílico Cristal 4mm + Argolla Acero',
+        colors: [
+          { name: 'Acrílico Cristal', hex: '#FFFFFF' },
+          { name: 'Acrílico Negro', hex: '#18181B' },
+        ],
+      },
+      {
+        id: 'prod-puzzle',
+        name: 'Rompecabezas Personalizado de Colección',
+        type: 'puzzle',
+        price: 40000,
+        description: 'Cartón rígido de 2mm con laminado brillante satinado. 120 piezas de encaje perfecto en caja de presentación.',
+        material: 'Cartón Rígido 2mm con Barniz UV (Formato A4)',
+        colors: [
+          { name: 'Estándar Premium', hex: '#FFFFFF' },
+        ],
+      },
+    ];
+
+    const COMBOS = [
+      {
+        id: 'combo-1',
+        name: 'Combo Camiseta + Tote Bag',
+        tagline: 'El favorito de streetstyle para regalar o renovar tu estilo diario.',
+        price: 75000,
+        originalPrice: 82000,
+        savings: 7000,
+        popular: true,
+        items: [
+          { type: 'tshirt', name: 'Camiseta Algodón Premium' },
+          { type: 'totebag', name: 'Tote Bag Lona 280g' },
+        ],
+      },
+      {
+        id: 'combo-2',
+        name: 'Combo Llavero + Mug',
+        tagline: 'El detalle perfecto para fechas especiales, aniversarios y colegas.',
+        price: 40000,
+        originalPrice: 45000,
+        savings: 5000,
+        popular: false,
+        items: [
+          { type: 'keychain', name: 'Llavero Acrílico Doble Cara' },
+          { type: 'mug', name: 'Mug Cerámico 11 oz' },
+        ],
+      },
+      {
+        id: 'combo-3',
+        name: 'Combo Mug + Camiseta Personalizada',
+        tagline: 'Nuestra combinación insignia para recuerdos y momentos inolvidables.',
+        price: 70000,
+        originalPrice: 77000,
+        savings: 7000,
+        popular: false,
+        items: [
+          { type: 'mug', name: 'Mug Cerámico 11 oz' },
+          { type: 'tshirt', name: 'Camiseta Algodón Premium' },
+        ],
+      },
+    ];
+
+    const GRAPHIC_THEMES = [
+      { id: 'spotify', name: 'Código Spotify & Música', desc: 'Onda sonora de tu canción preferida' },
+      { id: 'anniversary', name: 'Aniversario & Parejas', desc: 'Silueta de manos y fecha memorable' },
+      { id: 'minimal_line', name: 'Línea Continua & Arte', desc: 'Ilustración geométrica moderna' },
+      { id: 'motivational', name: 'Frases de Fuerza & Wolf', desc: 'Tipografía de impacto para tu estilo' },
+    ];
+
+    const RECENT_PURCHASES = [
+      { name: 'María Camila', loc: 'Bocagrande, Cartagena', item: 'Combo Mug + Camiseta Personalizada', time: 'Hace 4 min' },
+      { name: 'Andrés Morales', loc: 'Manga, Cartagena', item: 'Combo Camiseta + Tote Bag', time: 'Hace 9 min' },
+      { name: 'Valentina C.', loc: 'Castillogrande, Cartagena', item: 'Combo Llavero + Mug con Caja de Regalo', time: 'Hace 15 min' },
+      { name: 'Sebastián G.', loc: 'Getsemaní, Cartagena', item: 'Camiseta Algodón Premium (Blanco)', time: 'Hace 24 min' },
+    ];
+
+    // --- LIENZO DE PERSONALIZACIÓN Y MOCKUP EN VIVO ---
+    const LiveMockupCanvas = ({ productType, config }) => {
+      const { baseColor, customText, fontFamily, textColor, uploadedImageUrl, selectedThemeId } = config;
+      const isDarkBase = baseColor === '#18181B' || baseColor === '#111111';
+
+      const getFontFamily = () => {
+        if (fontFamily === 'serif') return "'Playfair Display', serif";
+        if (fontFamily === 'urban') return "'Space Grotesk', sans-serif";
+        return "'Plus Jakarta Sans', sans-serif";
+      };
+
+      const renderPrintArea = () => (
+        <div className="flex flex-col items-center justify-center text-center p-2 max-w-[85%] select-none pointer-events-none z-10">
+          {uploadedImageUrl && (
+            <img src={uploadedImageUrl} alt="Personalizado" className="max-w-[110px] max-h-[100px] object-cover rounded shadow-xs mb-1.5 border border-black/10" />
+          )}
+
+          {!uploadedImageUrl && selectedThemeId === 'spotify' && (
+            <div className="flex flex-col items-center mb-1">
+              <span className="text-[9px] font-bold tracking-widest uppercase mb-1" style={{ color: textColor }}>SPOTIFY CODE</span>
+              <div className="flex items-center gap-1">
+                {[14, 24, 10, 30, 18, 8, 22, 32, 14, 26, 20, 12].map((h, i) => (
+                  <span key={i} className="w-1 rounded-full" style={{ height: `${h}px`, backgroundColor: textColor }} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!uploadedImageUrl && selectedThemeId === 'anniversary' && (
+            <div className="text-center mb-1" style={{ color: textColor }}>
+              <div className="text-sm">♥</div>
+              <span className="text-[9px] font-bold tracking-widest uppercase">Cartagena · 10.11.2024</span>
+            </div>
+          )}
+
+          {!uploadedImageUrl && selectedThemeId === 'motivational' && (
+            <div className="text-center mb-1" style={{ color: textColor }}>
+              <span className="text-[8px] font-bold uppercase tracking-wider block opacity-75">— WOLF COLLECTIVE —</span>
+              <span className="text-[11px] font-black uppercase">MAKE YOUR RULES</span>
+            </div>
+          )}
+
+          {customText && (
+            <div className="text-xs sm:text-sm font-semibold transition-all mt-0.5 leading-tight" style={{ fontFamily: getFontFamily(), color: textColor }}>
+              {customText}
+            </div>
+          )}
+
+          {!uploadedImageUrl && !selectedThemeId && !customText && (
+            <div className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 border border-dashed rounded opacity-70" style={{ borderColor: textColor, color: textColor }}>
+              Tu diseño aquí
+            </div>
+          )}
+        </div>
+      );
+
+      return (
+        <div className="relative flex flex-col items-center justify-center w-full aspect-square bg-[#F7F5F2] rounded-2xl p-6 overflow-hidden border border-[#E8DFD8] shadow-inner">
+          <div className="absolute inset-0 bg-radial from-white/90 via-transparent to-black/5 pointer-events-none" />
+
+          {/* CAMISETA */}
+          {productType === 'tshirt' && (
+            <div className="relative w-full max-w-[280px] h-full flex items-center justify-center">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+                <path
+                  d="M 65 30 C 75 42, 125 42, 135 30 L 175 52 L 155 86 L 138 74 L 142 178 C 142 182, 138 184, 134 184 L 66 184 C 62 184, 58 182, 58 178 L 62 74 L 45 86 L 25 52 Z"
+                  fill={baseColor}
+                  stroke={isDarkBase ? '#3F3F46' : '#D1D5DB'}
+                  strokeWidth="2"
+                />
+                <path d="M 65 30 C 75 42, 125 42, 135 30 C 122 36, 78 36, 65 30 Z" fill={isDarkBase ? '#27272A' : '#E5E7EB'} />
+              </svg>
+              <div className="absolute top-[35%] w-[130px] flex items-center justify-center">
+                {renderPrintArea()}
+              </div>
+            </div>
+          )}
+
+          {/* MUG */}
+          {productType === 'mug' && (
+            <div className="relative w-full max-w-[260px] h-full flex items-center justify-center">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+                <path d="M 140 70 C 178 70, 178 135, 140 135 L 140 120 C 162 120, 162 85, 140 85 Z" fill={baseColor} stroke={isDarkBase ? '#3F3F46' : '#D1D5DB'} strokeWidth="2.5" />
+                <path d="M 50 55 L 140 55 C 140 145, 138 160, 130 165 C 122 170, 68 170, 60 165 C 52 160, 50 145, 50 55 Z" fill={baseColor} stroke={isDarkBase ? '#3F3F46' : '#D1D5DB'} strokeWidth="2" />
+                <ellipse cx="95" cy="55" rx="45" ry="11" fill={isDarkBase ? '#27272A' : '#E5E7EB'} stroke={isDarkBase ? '#52525B' : '#9CA3AF'} strokeWidth="1.5" />
+              </svg>
+              <div className="absolute top-[38%] left-[23%] w-[115px] flex items-center justify-center">
+                {renderPrintArea()}
+              </div>
+            </div>
+          )}
+
+          {/* TOTE BAG */}
+          {productType === 'totebag' && (
+            <div className="relative w-full max-w-[260px] h-full flex items-center justify-center">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+                <path d="M 75 75 C 75 20, 125 20, 125 75" fill="none" stroke={isDarkBase ? '#27272A' : '#D7C4B7'} strokeWidth="7" strokeLinecap="round" />
+                <path d="M 45 75 L 155 75 L 150 180 C 150 184, 146 186, 140 186 L 60 186 C 54 186, 50 184, 50 180 Z" fill={baseColor} stroke={isDarkBase ? '#3F3F46' : '#C4B5A5'} strokeWidth="2" />
+              </svg>
+              <div className="absolute top-[48%] w-[125px] flex items-center justify-center">
+                {renderPrintArea()}
+              </div>
+            </div>
+          )}
+
+          {/* LLAVERO */}
+          {productType === 'keychain' && (
+            <div className="relative w-full max-w-[240px] h-full flex items-center justify-center">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+                <circle cx="100" cy="35" r="18" stroke="#71717A" strokeWidth="4" fill="none" />
+                <line x1="100" y1="53" x2="100" y2="70" stroke="#71717A" strokeWidth="4" strokeLinecap="round" />
+                <rect x="55" y="85" width="90" height="95" rx="14" fill={baseColor} stroke={isDarkBase ? '#3F3F46' : '#CBD5E1'} strokeWidth="3" />
+                <circle cx="100" cy="98" r="4" fill="#94A3B8" />
+              </svg>
+              <div className="absolute top-[52%] w-[80px] flex items-center justify-center">
+                {renderPrintArea()}
+              </div>
+            </div>
+          )}
+
+          {/* ROMPECABEZAS */}
+          {productType === 'puzzle' && (
+            <div className="relative w-full max-w-[260px] h-full flex items-center justify-center">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+                <rect x="30" y="45" width="140" height="110" rx="6" fill={baseColor} stroke="#D4D4D8"
