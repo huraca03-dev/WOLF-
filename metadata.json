@@ -1,0 +1,8 @@
+{
+  "name": "WOLF RF | Estudio de Co-Creación & Combos Personalizados",
+  "description": "Plataforma e-commerce interactiva de co-creación y venta de combos personalizados de WOLF RF en Cartagena de Indias. Diseña camisetas, mugs, tote bags y accesorios en tiempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
